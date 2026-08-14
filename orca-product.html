@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orca I | 青心意创 Cyan Robotics</title>
+<style>
+:root {
+    --primary: #E85A1F;
+    --black: #0A0A0A;
+    --text-secondary: #555555;
+    --white: #FFFFFF;
+    --bg-light: #F7F7F7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--white);
+    background: #000000;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ===== NAV ===== */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: rgba(247,247,247,0.85);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    transition: box-shadow 0.4s ease;
+  }
+  .nav.scrolled { box-shadow: 0 1px 20px rgba(0,0,0,0.04); }
+  .nav-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 60px;
+    height: 64px;
+  }
+  .logo img { height: 40px; display: block; }
+  .nav-links {
+    display: flex;
+    gap: 44px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s;
+    position: relative;
+    letter-spacing: 0.2px;
+  }
+  .nav-links a:hover { color: var(--primary); }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px; left: 0;
+    width: 0; height: 2px;
+    background: var(--primary);
+    transition: width 0.3s cubic-bezier(0.16,1,0.3,1);
+    border-radius: 1px;
+  }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative;
+    background: #000;
+    overflow: hidden;
+    padding-top: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .hero-img-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 0 60px;
+  }
+  .hero-img {
+    width: 100%;
+    max-width: 1100px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+  .hero-content {
+    text-align: center;
+    padding: 20px 20px 80px;
+  }
+  .hero-content h1 {
+    font-size: 56px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    line-height: 1.1;
+  }
+  .hero-content p {
+    font-size: 28px;
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+    letter-spacing: 6px;
+  }
+
+  /* ===== SHOWCASE IMAGE ===== */
+  .showcase-section {
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0 60px;
+  }
+  .showcase-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    aspect-ratio: 16/9;
+    background: #000;
+    overflow: hidden;
+  }
+  .showcase-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* ===== FEATURE SECTIONS ===== */
+  .feature-section {
+    background: #000;
+    padding: 0;
+  }
+  .feature-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    padding: 80px 60px;
+  }
+  .feature-container.reverse {
+    direction: rtl;
+  }
+  .feature-container.reverse > * {
+    direction: ltr;
+  }
+  .feature-img-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .feature-img {
+    width: 100%;
+    max-width: 560px;
+    display: block;
+    object-fit: contain;
+  }
+  .feature-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .feature-text h2 {
+    font-size: 40px;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 28px;
+    line-height: 1.15;
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+  .feature-text p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.5);
+    line-height: 2.2;
+    margin-bottom: 2px;
+    font-weight: 400;
+  }
+
+  /* ===== SPECS ===== */
+  .specs-section {
+    background: #000;
+    padding: 60px 60px 100px;
+  }
+  .specs-header {
+    text-align: center;
+    font-size: 36px;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 50px;
+    letter-spacing: 2px;
+  }
+  .specs-table-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .specs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+  .specs-table th,
+  .specs-table td {
+    padding: 14px 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .specs-table th {
+    background: rgba(255,255,255,0.02);
+    font-weight: 600;
+    width: 38%;
+    font-size: 15px;
+  }
+  .specs-table td {
+    font-weight: 400;
+    line-height: 1.9;
+    font-size: 15px;
+  }
+  .specs-note {
+    max-width: 900px;
+    margin: 24px auto 0;
+    color: #fff;
+    font-size: 13px;
+    line-height: 2.2;
+  }
+  .specs-note p { margin-bottom: 2px; }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: var(--black);
+    color: white;
+    padding: 60px 80px 40px;
+  }
+  .footer-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  .footer-brand {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: rgba(255,255,255,0.9);
+  }
+  .footer-desc {
+    color: #888;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .footer-col h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.5px;
+  }
+  .footer-links-inline {
+    display: flex;
+    gap: 0;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+  .footer-links-inline li {
+    padding: 0 16px;
+    border-right: 1px solid #444;
+  }
+  .footer-links-inline li:first-child { padding-left: 0; }
+  .footer-links-inline li:last-child { border-right: none; padding-right: 0; }
+  .footer-links-inline a {
+    color: #888;
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.3s;
+    white-space: nowrap;
+  }
+  .footer-links-inline a:hover { color: var(--primary); }
+  .footer-contact-list {
+    list-style: none;
+  }
+  .footer-contact-list li {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 6px;
+    line-height: 1.6;
+  }
+  .footer-bottom {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-top: 24px;
+    border-top: 1px solid #222;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #666;
+    font-size: 12px;
+  }
+
+  /* ===== ANIMATIONS ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1024px) {
+    .nav-inner { padding: 0 32px; }
+    .hero-img-wrap { padding: 0 32px; }
+    .hero-content h1 { font-size: 44px; }
+    .hero-content p { font-size: 22px; }
+    .feature-container { grid-template-columns: 1fr; gap: 40px; padding: 60px 40px; }
+    .feature-container.reverse { direction: ltr; }
+    .feature-text h2 { font-size: 34px; line-height: 1.15; white-space: normal; }
+    .specs-section { padding: 60px 40px; }
+    .specs-header { font-size: 30px; }
+    .footer-inner { flex-wrap: wrap; gap: 32px; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero-content h1 { font-size: 36px; }
+    .hero-content p { font-size: 18px; letter-spacing: 3px; }
+    .feature-text h2 { font-size: 28px; line-height: 1.15; white-space: normal; }
+    .feature-text p { font-size: 14px; }
+    .specs-table th, .specs-table td { padding: 10px 12px; font-size: 13px; }
+    .specs-header { font-size: 26px; }
+    .footer { padding: 40px 32px; }
+    .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+  }
+  .back-to-home {
+    position: fixed;
+    top: 80px;
+    left: 24px;
+    z-index: 9999;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 100px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+  }
+  .back-to-home:hover {
+    background: #E85A1F;
+    border-color: #E85A1F;
+    transform: translateX(-2px);
+  }
+  .back-to-home svg {
+    transition: transform 0.3s ease;
+  }
+  .back-to-home:hover svg {
+    transform: translateX(-3px);
+  }
+
+  .lang-switch {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #E85A1F;
+    border: 1.5px solid #E85A1F;
+    padding: 6px 16px;
+    border-radius: 100px;
+    transition: all 0.3s;
+    margin-left: 20px;
+    user-select: none;
+    white-space: nowrap;
+    background: transparent;
+  }
+  .lang-switch:hover {
+    background: #E85A1F;
+    color: white;
+  }
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<!-- 中文版 -->
+<div id="content-zh" class="lang-content" style="display:none;">
+<!-- 返回主页按钮 -->
+<a href="index.html" target="_self" class="back-to-home">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </svg>
+  返回主页
+</a>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <div class="logo">
+      <img src="logo.png" alt="青心意创">
+    </div>
+    <ul class="nav-links">
+      <li><a href="#amoo" target="_self">Amoo</a></li>
+      <li><a href="#orca" target="_self">Orca</a></li>
+      <li><a href="#tech" target="_self">技术优势</a></li>
+      <li><a href="#dinoos" target="_self">Dino OS</a></li>
+      <li><a href="#mgm" target="_self">合作案例</a></li>
+      <li><a href="#about" target="_self">关于Cyan</a></li>
+    </ul>
+    <div class="lang-switch" onclick="switchLang('en')">English</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-img-wrap">
+    <img src="55071538.jpeg" alt="Orca I" class="hero-img">
+  </div>
+  <div class="hero-content reveal">
+    <h1>Orca I</h1>
+    <p>全面拟人，灵动共生</p>
+  </div>
+</section>
+
+<!-- SHOWCASE IMAGE -->
+<section class="showcase-section">
+  <div class="showcase-wrap reveal">
+    <img src="173424317.jpg" alt="Orca I 全身展示">
+  </div>
+</section>
+
+<!-- FEATURE 1: 大显身手 -->
+<section class="feature-section">
+  <div class="feature-container reveal">
+    <div class="feature-img-wrap">
+      <img src="173501595.jpg" alt="大显身手" class="feature-img">
+    </div>
+    <div class="feature-text">
+      <h2>大显身手<br>让运动更灵动</h2>
+      <p>双臂强劲负载达10kg，末端选配灵巧手，胜任各类复杂精细操作</p>
+      <p>实现仿人直膝运动，无惧坡度/撞击，低能耗，更持久</p>
+      <p>首创情感步态，每一步都能灵动传递喜怒哀乐</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE 2: 情商在线 -->
+<section class="feature-section">
+  <div class="feature-container reverse reveal">
+    <div class="feature-img-wrap">
+      <img src="173564431.jpg" alt="情商在线" class="feature-img">
+    </div>
+    <div class="feature-text">
+      <h2>情商在线<br>超沉浸社交</h2>
+      <p>灵动情绪外显屏，让喜怒哀乐实时可见</p>
+      <p>搭载大语言模型，配备感情化肢体动作，打造超沉浸社交体验</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE 3: 配置拉满 -->
+<section class="feature-section">
+  <div class="feature-container reveal">
+    <div class="feature-img-wrap">
+      <img src="173564526.png" alt="配置拉满" class="feature-img">
+    </div>
+    <div class="feature-text">
+      <h2>配置拉满<br>实力全开</h2>
+      <p>14核高性能CPU，超强脑力流畅响应，思考永远快人一步</p>
+      <p>同步加持高算力模组，复杂任务亦能轻松拿捏</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE 4: 深度开放 -->
+<section class="feature-section">
+  <div class="feature-container reverse reveal">
+    <div class="feature-img-wrap">
+      <img src="173564332.jpeg" alt="深度开放" class="feature-img">
+    </div>
+    <div class="feature-text">
+      <h2>深度开放<br>欢迎共创</h2>
+      <p>开放全接口构建友好生态，Sim2Real Gap小，仿真到现实无缝连接</p>
+      <p>底层通信500-1000Hz高带宽，控制更精细</p>
+      <p>大幅降低二次开发门槛与应用落地成本</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section class="specs-section" id="specs">
+  <h2 class="specs-header reveal">详细参数</h2>
+  <div class="specs-table-wrap reveal">
+    <table class="specs-table">
+      <tr><th>本体信息</th><td>Orca I</td></tr>
+      <tr><th>高宽厚(站立)</th><td>1510 x 520 x 280mm</td></tr>
+      <tr><th>单臂臂展</th><td>0.66m</td></tr>
+      <tr><th>单腿(小腿+大腿)长度</th><td>0.84m</td></tr>
+      <tr><th>带电池总重量</th><td>约42kg</td></tr>
+      <tr><th>总自由度</th><td>28</td></tr>
+      <tr><th>单臂自由度</th><td>6</td></tr>
+      <tr><th>单腿自由度</th><td>4</td></tr>
+      <tr><th>单足自由度</th><td>2</td></tr>
+      <tr><th>腰部自由度</th><td>1</td></tr>
+      <tr><th>头部自由度</th><td>3</td></tr>
+      <tr><th>膝关节最大扭矩</th><td>150Nm</td></tr>
+      <tr><th>单臂最大负载</th><td>约5kg</td></tr>
+      <tr><th>末端执行器</th><td>灵巧手，附赠自适应软夹爪</td></tr>
+      <tr><th>关节运动范围</th><td>
+        腰关节: ±70°<br>
+        膝关节: -35°~+120°<br>
+        髋关节: Pitch -70°~+110°<br>
+        Roll -15°~+90°<br>
+        Yaw -25.5°~+149°<br>
+        足部: Pitch ±90°<br>
+        Roll ±35°
+      </td></tr>
+      <tr><th>关节编码器</th><td>双编码器</td></tr>
+      <tr><th>散热系统</th><td>局部风冷散热</td></tr>
+      <tr><th>供电方式</th><td>双锂电池供电</td></tr>
+      <tr><th>CPU</th><td>14核高性能CPU</td></tr>
+      <tr><th>GPU</th><td>NVIDIA Jeston Orin Nano Super</td></tr>
+      <tr><th>3D LiDAR, Depth Camera, IMU</th><td>support</td></tr>
+      <tr><th>six-pulse ring array microphone, speaker</th><td>support</td></tr>
+      <tr><th>WI-FI6, Bluetooth 5.2</th><td>support</td></tr>
+      <tr><th>智能电池(快拆)</th><td>5000mAh x2</td></tr>
+      <tr><th>续航时间</th><td>站立2h/行走1h</td></tr>
+      <tr><th>手持式遥控器</th><td>支持</td></tr>
+      <tr><th>拓展口</th><td>USB3.0、以太网、48V</td></tr>
+      <tr><th>二次开发</th><td>标配例程及高阶版本的人形机器人动作相关的训练及部署代码</td></tr>
+      <tr><th>遥操系统</th><td>开放全身遥操作接口</td></tr>
+    </table>
+  </div>
+  <div class="specs-note reveal">
+    <p>注：</p>
+    <p>[1]以上配置，在不同型号/方案中存在差异，购买前请务必咨询销售;</p>
+    <p>[2]产品外观后续可能会有升级调整，请以届时实物为准;</p>
+    <p>[3]本页面有些示例功能，还在开发测试完善，后续陆续开放给用户;</p>
+    <p>[4]请遵守各地区法律法规。</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer" id="about">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">上海青心意创科技有限公司</div>
+      <p class="footer-desc">版权所有 © 上海青心意创科技有限公司</p>
+    </div>
+    <div class="footer-col">
+      <h4>联系我们</h4>
+      <ul class="footer-links-inline">
+        <li><a href="#">媒体合作</a></li>
+        <li><a href="#">生态合作</a></li>
+        <li><a href="#">供应链合作</a></li>
+        <li><a href="#">产品采购</a></li>
+        <li><a href="#">加入我们</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>联系方式</h4>
+      <ul class="footer-contact-list">
+        <li>市场：marketing@cyanborg.com</li>
+        <li>采购：purchasing@cyanborg.com</li>
+        <li>人事：hr@cyanborg.com</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 青心意创 Cyan Robotics. All rights reserved.</span>
+    <span>沪ICP备XXXXXXXX号</span>
+  </div>
+</footer>
+</div>
+
+<!-- English Version -->
+<div id="content-en" class="lang-content" style="display:none;">
+<a href="index.html" target="_self" class="back-to-home">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </svg>
+  Back
+</a>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <div class="logo">
+      <img src="logo.png" alt="Cyan Robotics">
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html#amoo" target="_self">Amoo</a></li>
+      <li><a href="index.html#orca" target="_self">Orca</a></li>
+      <li><a href="index.html#tech" target="_self">Technical Strength</a></li>
+      <li><a href="index.html#dinoos" target="_self">Dino OS</a></li>
+      <li><a href="index.html#mgm" target="_self">Collaboration Cases</a></li>
+      <li><a href="index.html#about" target="_self">About Cyan</a></li>
+    </ul>
+    <div class="lang-switch" onclick="switchLang('zh')">中文</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-img-wrap">
+    <img src="55071538.jpeg" alt="Orca I" class="hero-img">
+  </div>
+  <div class="hero-content reveal">
+    <h1>Orca I</h1>
+    <p>Comprehensive Personification, Smart Symbiosis</p>
+  </div>
+</section>
+
+<!-- SHOWCASE IMAGE -->
+<section class="showcase-section">
+  <div class="showcase-wrap reveal">
+    <img src="173424317.jpg" alt="Orca I Full Body">
+  </div>
+</section>
+
+<!-- FEATURE 1 -->
+<section class="feature-section">
+  <div class="feature-container reveal">
+    <div class="feature-img-wrap">
+      <img src="173501595.jpg" alt="Show Their Skills" class="feature-img">
+    </div>
+    <div class="feature-text">
+      <h2>Show Their Skills to<br>Make Sports More Flexible</h2>
+      <p>The strong load of both arms reaches 10kg, and the end is equipped with dexterous hands, which are competent for all kinds of complex and fine operations</p>
+      <p>Achieve human-like straight knee movement, no fear of slope/impact, low energy consumption, longer lasting's first emotional gait, every step can be smart to convey emotions</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE 2 -->
+<section class="feature-section">
+  <div class="feature-container reverse reveal">
+    <div class="feature-img-wrap">
+      <img src="173564431.jpg" alt="EQ Online" class="feature-img">
+    </div>
+    <div class="feature-text">
+      <h2>EQ Online<br>Super Immersive Social</h2>
+      <p>Smart emotional display screen, so that the joy and anger can be seen in real time</p>
+      <p>Equipped with a large language model, equipped with emotional body movements, to create a super immersive social experience</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE 3 -->
+<section class="feature-section">
+  <div class="feature-container reveal">
+    <div class="feature-img-wrap">
+      <img src="173564526.png" alt="Configuration" class="feature-img">
+    </div>
+    <div class="feature-text">
+      <h2>Configuration Full<br>Strength Full Open</h2>
+      <p>14-core high-performance CPU, super brain power and smooth response, thinking is always one step faster</p>
+      <p>Synchronous blessing high-power module, complex tasks can also be easily handled</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE 4 -->
+<section class="feature-section">
+  <div class="feature-container reverse reveal">
+    <div class="feature-img-wrap">
+      <img src="173564332.jpeg" alt="Deep Open" class="feature-img">
+    </div>
+    <div class="feature-text">
+      <h2>Deep Open<br>Welcome to Create</h2>
+      <p>Open full interface to build friendly ecology, small Sim2Real Gap, seamless connection from simulation to reality</p>
+      <p>Bottom communication 500-1000Hz high bandwidth, more sophisticated control</p>
+      <p>Significantly reduce the secondary development threshold and application landing costs</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section class="specs-section" id="specs">
+  <h2 class="specs-header reveal">Detailed Parameters</h2>
+  <div class="specs-table-wrap reveal">
+    <table class="specs-table">
+      <tr><th>Ontology Information</th><td>Orca I</td></tr>
+      <tr><th>high and wide (standing)</th><td>1510 x 520 x 280mm</td></tr>
+      <tr><th>single arm span</th><td>0.66m</td></tr>
+      <tr><th>length of single leg (calf thigh)</th><td>0.84m</td></tr>
+      <tr><th>with battery</th><td>about 42kg</td></tr>
+      <tr><th>Total Degrees of Freedom</th><td>28</td></tr>
+      <tr><th>single-arm degrees of freedom</th><td>6</td></tr>
+      <tr><th>single-leg freedom</th><td>4</td></tr>
+      <tr><th>single-legged degrees of freedom</th><td>2</td></tr>
+      <tr><th>waist degree of freedom</th><td>1</td></tr>
+      <tr><th>Head Degrees of Freedom</th><td>3</td></tr>
+      <tr><th>Maximum torque of knee joint</th><td>150Nm</td></tr>
+      <tr><th>single arm maximum load</th><td>about 5kg</td></tr>
+      <tr><th>end effector</th><td>dexterous hand with adaptive soft gripper</td></tr>
+      <tr><th>joint range of motion</th><td>
+        lumbar joint: ±70°<br>
+        Knee joint:-35°~120°<br>
+        Hip: Pitch -70°~110°<br>
+        Roll -15°~90°<br>
+        Yaw -25.5°~149°<br>
+        Foot: Pitch ±90°<br>
+        Roll ±35°
+      </td></tr>
+      <tr><th>joint encoder</th><td>double encoder</td></tr>
+      <tr><th>cooling system</th><td>Local air cooling</td></tr>
+      <tr><th>Power supply mode</th><td>dual lithium battery power supply</td></tr>
+      <tr><th>CPU</th><td>14-core high-performance CPU</td></tr>
+      <tr><th>GPU</th><td>NVIDIA Jeston Orin Nano Super</td></tr>
+      <tr><th>3D LiDAR, Depth Camera, IMU</th><td>support</td></tr>
+      <tr><th>six-pulse ring array microphone, speaker</th><td>support</td></tr>
+      <tr><th>WI-FI6, Bluetooth 5.2</th><td>support</td></tr>
+      <tr><th>smart battery (quick release)</th><td>5000mAh x2</td></tr>
+      <tr><th>Endurance</th><td>standing 2h/walking 1h</td></tr>
+      <tr><th>Handheld Remote Control</th><td>support</td></tr>
+      <tr><th>expansion port</th><td>USB3.0, Ethernet, 48V</td></tr>
+      <tr><th>secondary development</th><td>standard routines and advanced versions of humanoid robot motion-related training and deployment code</td></tr>
+      <tr><th>Teleoperation System</th><td>open full-body teleoperation interface</td></tr>
+    </table>
+  </div>
+  <div class="specs-note reveal">
+    <p>Note:</p>
+    <p>[1] The above configuration, there are differences in different models/schemes, please be sure to consult the sales before purchasing;</p>
+    <p>[2] The appearance of the product may be upgraded and adjusted in the future. Please refer to the actual product at that time;</p>
+    <p>[3] There are some sample functions on this page, which are still being developed and tested, and will be opened to users in succession;</p>
+    <p>[4] Please comply with local laws and regulations.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer" id="about">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Shanghai Cyan Innovation Technology Co., Ltd.</div>
+      <p class="footer-desc">All Rights Reserved © Shanghai Cyan Innovation Technology Co., Ltd.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Contact Us</h4>
+      <ul class="footer-links-inline">
+        <li><a href="#">Media</a></li>
+        <li><a href="#">Ecosystem</a></li>
+        <li><a href="#">Supply Chain</a></li>
+        <li><a href="#">Purchase</a></li>
+        <li><a href="#">Join Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul class="footer-contact-list">
+        <li>Marketing: marketing@cyanborg.com</li>
+        <li>Purchasing: purchasing@cyanborg.com</li>
+        <li>HR: hr@cyanborg.com</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Cyan Robotics. All rights reserved.</span>
+    <span>沪ICP备XXXXXXXX号</span>
+  </div>
+</footer>
+</div>
+
+<script>
+  function switchLang(lang) {
+    if (lang === 'zh') {
+      document.getElementById('content-zh').style.display = 'block';
+      document.getElementById('content-en').style.display = 'none';
+      document.documentElement.lang = 'zh-CN';
+      document.title = 'Orca I — 全面拟人，灵动共生 | 青心意创 Cyan Robotics';
+    } else {
+      document.getElementById('content-en').style.display = 'block';
+      document.getElementById('content-zh').style.display = 'none';
+      document.documentElement.lang = 'en';
+      document.title = 'Orca I — Fully Humanoid, Vibrantly Symbiotic | Cyan Robotics';
+    }
+    localStorage.setItem('cyan-lang', lang);
+  }
+
+  const savedLang = localStorage.getItem('cyan-lang') || 'zh';
+  switchLang(savedLang);
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  const nav = document.getElementById('nav');
+  if (nav) {
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+  }
+</script>
+
+</body>
+</html>
